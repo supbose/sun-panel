@@ -6,7 +6,7 @@
 
 <a href="https://github.com/hslr-s/sun-panel.git">Github</a> | <a href="https://gitee.com/hslr/sun-panel.git">Gitee</a> | <a href="https://hub.docker.com/r/hslr/sun-panel">Docker Hub</a> |  <a href="https://www.bilibili.com/video/BV1AC4y1U7va">bilibili</a> | <a href="https://www.youtube.com/channel/UCKwbFmKU25R602z6P2fgPYg">YouTube</a>
 
-一个服务器、NAS导航面板、Homepage、浏览器首页。
+一个服务器、NAS导航面板、Homepage、浏览器首页。c
 
 </div>
 
