@@ -9,6 +9,7 @@ import { VisitMode } from '@/enums/auth'
 import SvgSrcBaidu from '@/assets/search_engine_svg/baidu.svg'
 import SvgSrcBing from '@/assets/search_engine_svg/bing.svg'
 import SvgSrcGoogle from '@/assets/search_engine_svg/google.svg'
+import SvgSrcToutiao from '@/assets/search_engine_svg/toutiao.svg'
 
 withDefaults(defineProps<{
   background?: string
@@ -33,6 +34,11 @@ const searchTerm = ref('')
 const isFocused = ref(false)
 const searchSelectListShow = ref(false)
 const defaultSearchEngineList = ref<DeskModule.SearchBox.SearchEngine[]>([
+  {
+    iconSrc: SvgSrcToutiao,
+    title: 'Toutiao',
+    url: 'https://so.toutiao.com/search?dvpf=pc&source=input&keyword=%s'
+  },
   {
     iconSrc: SvgSrcGoogle,
     title: 'Google',
@@ -66,20 +72,20 @@ const onBlur = (): void => {
   isFocused.value = false
 }
 
-function handleEngineClick() {
+function handleEngineClick () {
   // 访客模式不允许修改
   if (authStore.visitMode === VisitMode.VISIT_MODE_PUBLIC)
     return
   searchSelectListShow.value = !searchSelectListShow.value
 }
 
-function handleEngineUpdate(engine: DeskModule.SearchBox.SearchEngine) {
+function handleEngineUpdate (engine: DeskModule.SearchBox.SearchEngine) {
   state.value.currentSearchEngine = engine
   moduleConfig.saveToCloud(moduleConfigName, state.value)
   searchSelectListShow.value = false
 }
 
-function handleSearchClick() {
+function handleSearchClick () {
   const url = state.value.currentSearchEngine.url
   const keyword = searchTerm
   // 如果网址中存在 %s，则直接替换为关键字
@@ -91,7 +97,7 @@ function handleSearchClick() {
     window.location.href = fullUrl
 }
 
-function replaceOrAppendKeywordToUrl(url: string, keyword: string) {
+function replaceOrAppendKeywordToUrl (url: string, keyword: string) {
   // 如果网址中存在 %s，则直接替换为关键字
   if (url.includes('%s'))
     return url.replace('%s', encodeURIComponent(keyword))
@@ -104,7 +110,7 @@ const handleItemSearch = () => {
   emits('itemSearch', searchTerm.value)
 }
 
-function handleClearSearchTerm() {
+function handleClearSearchTerm () {
   searchTerm.value = ''
   emits('itemSearch', searchTerm.value)
 }
@@ -121,14 +127,17 @@ onMounted(() => {
 
 <template>
   <div class="w-full" @keydown.enter="handleSearchClick">
-    <div class="search-container flex rounded-2xl items-center justify-center text-white w-full" :style="{ background, color: textColor }" :class="{ focused: isFocused }">
+    <div class="search-container flex rounded-2xl items-center justify-center text-white w-full"
+      :style="{ background, color: textColor }" :class="{ focused: isFocused }">
       <div class="w-[40px] flex justify-center cursor-pointer" @click="handleEngineClick">
         <NAvatar :src="state.currentSearchEngine.iconSrc" style="background-color: transparent;" :size="20" />
       </div>
 
-      <input v-model="searchTerm" :placeholder="$t('deskModule.searchBox.inputPlaceholder')" @focus="onFocus" @blur="onBlur" @input="handleItemSearch">
+      <input v-model="searchTerm" :placeholder="$t('deskModule.searchBox.inputPlaceholder')" @focus="onFocus"
+        @blur="onBlur" @input="handleItemSearch">
 
-      <div v-if="searchTerm !== ''" class="w-[25px] mr-[10px] flex justify-center cursor-pointer" @click="handleClearSearchTerm">
+      <div v-if="searchTerm !== ''" class="w-[25px] mr-[10px] flex justify-center cursor-pointer"
+        @click="handleClearSearchTerm">
         <SvgIcon style="width: 20px;height: 20px;" icon="line-md:close-small" />
       </div>
       <div class="w-[25px] flex justify-center cursor-pointer" @click="handleSearchClick">
@@ -140,16 +149,12 @@ onMounted(() => {
     <div v-if="searchSelectListShow" class="w-full mt-[10px] rounded-xl p-[10px]" :style="{ background }">
       <div class="flex items-center">
         <div class="flex items-center">
-          <div
-            v-for="item, index in defaultSearchEngineList"
-            :key="index"
-            :title="item.title"
+          <div v-for="item, index in defaultSearchEngineList" :key="index" :title="item.title"
             class="w-[40px] h-[40px] mr-[10px]  cursor-pointer bg-[#ffffff] flex items-center justify-center rounded-xl"
-            @click="handleEngineUpdate(item)"
-          >
+            @click="handleEngineUpdate(item)">
             <NAvatar :src="item.iconSrc" style="background-color: transparent;" :size="20" />
           </div>
-        <!-- <div class="w-[40px] h-[40px] ml-[10px] flex justify-center items-center cursor-pointer" @click="handleEngineClick">
+          <!-- <div class="w-[40px] h-[40px] ml-[10px] flex justify-center items-center cursor-pointer" @click="handleEngineClick">
           <NAvatar style="background-color: transparent;" :size="30">
             <SvgIcon icon="lets-icons:setting-alt-fill" style="font-size: 20px;" />
           </NAvatar>
@@ -158,7 +163,8 @@ onMounted(() => {
       </div>
 
       <div class="mt-[10px]">
-        <NCheckbox v-model:checked="state.newWindowOpen" @update-checked="moduleConfig.saveToCloud(moduleConfigName, state)">
+        <NCheckbox v-model:checked="state.newWindowOpen"
+          @update-checked="moduleConfig.saveToCloud(moduleConfigName, state)">
           <span :style="{ color: textColor }">
             {{ $t('deskModule.searchBox.openWithNewOpen') }}
           </span>
